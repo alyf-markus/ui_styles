@@ -1180,10 +1180,12 @@ class RemixShell {
 				if (current !== request_id) {
 					return;
 				}
-				const items = [];
+				const needle = txt.toLowerCase();
+				const exact = [];
+				const rest = [];
 				sets.forEach((set) => {
 					set.results.forEach((row) => {
-						items.push({
+						const item = {
 							label: row.label,
 							value: `${__(set.title)}: ${row.value}`,
 							description:
@@ -1191,9 +1193,16 @@ class RemixShell {
 									? __(set.title)
 									: `${__(set.title)} ${row.value}`,
 							route: row.route,
-							index: 1000 - items.length,
-						});
+						};
+						const name = String(row.value || "").toLowerCase();
+						(name === needle ? exact : rest).push(item);
 					});
+				});
+				// Global Search groups by DocType priority and splits names on "-".
+				// An exact document name still belongs first, so Enter opens that record.
+				const items = exact.concat(rest);
+				items.forEach((item, i) => {
+					item.index = 1000 - i;
 				});
 				items.push({
 					label: __("Search for {0}", [frappe.utils.xss_sanitise(txt).bold()]),
