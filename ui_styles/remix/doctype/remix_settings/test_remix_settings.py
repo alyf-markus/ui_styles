@@ -29,9 +29,7 @@ class TestRemixSettings(IntegrationTestCase):
 		bootinfo = frappe._dict()
 		extend_bootinfo(bootinfo)
 		self.assertEqual(bootinfo.remix["enabled"], 0)
-		self.assertEqual(bootinfo.remix["top_bar"], 0)
 		self.assertEqual(bootinfo.remix["alternative_navigation"], 0)
-		self.assertEqual(bootinfo.remix["pinbar"], [])
 		self.assertEqual(bootinfo.remix["app_favorites"], [])
 
 	def test_enable_requires_chrome(self):
@@ -72,9 +70,7 @@ class TestRemixSettings(IntegrationTestCase):
 		bootinfo = frappe._dict()
 		extend_bootinfo(bootinfo)
 		self.assertEqual(bootinfo.remix["enabled"], 1)
-		self.assertEqual(bootinfo.remix["top_bar"], 0)
 		self.assertEqual(bootinfo.remix["search"], 1)
-		self.assertEqual(bootinfo.remix["pin"], 0)
 		self.assertEqual(bootinfo.remix["history"], 1)
 		self.assertEqual(bootinfo.remix["alternative_navigation"], 1)
 		self.assertEqual(bootinfo.remix["favorites"], 1)
@@ -122,7 +118,6 @@ class TestRemixSettings(IntegrationTestCase):
 		self.assertEqual(flags["history"], 1)
 		self.assertEqual(flags["search"], 0)
 		self.assertEqual(flags["alternative_navigation"], 0)
-		self.assertEqual(flags["top_bar"], 0)
 
 	def test_favorites_without_sidebar(self):
 		doc = frappe.get_single("Remix Settings")

@@ -11,9 +11,7 @@ ui_styles.remix.flags = function () {
 	const r = (frappe.boot && frappe.boot.remix) || {};
 	return {
 		enabled: Number(r.enabled) === 1,
-		top_bar: Number(r.top_bar) === 1,
 		search: Number(r.search) === 1,
-		pin: Number(r.pin) === 1,
 		history: Number(r.history) === 1,
 		alternative_navigation: Number(r.alternative_navigation) === 1,
 		favorites: Number(r.favorites) === 1,

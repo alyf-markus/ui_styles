@@ -6,8 +6,6 @@
 	--remix-green-active: var(--sidebar-active-color, #fff);
 	--remix-ink: var(--text-color, #1f272e);
 	--remix-ink-muted: var(--text-muted, #6b6b6b);
-	--remix-topbar-ink: var(--text-color, #1f272e);
-	--remix-topbar-muted: var(--text-muted, #6b6b6b);
 	--remix-chip: var(--control-bg, #f3f3f3);
 }
 
@@ -39,44 +37,6 @@ body.remix-desk.remix-has-sidebar > .main-section {
 	flex: 1 1 0%;
 	width: auto;
 	min-width: 0;
-}
-
-.remix-logo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex: 0 0 auto;
-	height: 36px;
-	max-width: 160px;
-	padding: 0 4px;
-	color: var(--remix-topbar-ink, var(--remix-ink));
-	text-decoration: none;
-}
-
-.remix-logo img {
-	display: block;
-	height: 32px;
-	width: auto;
-	max-width: 150px;
-	object-fit: contain;
-}
-
-.remix-logo-fallback {
-	display: flex;
-	align-items: center;
-	color: var(--remix-topbar-ink, var(--remix-ink));
-}
-
-.remix-logo:has(img) .remix-logo-fallback {
-	display: none;
-}
-
-.remix-logo.has-broken-logo img {
-	display: none;
-}
-
-.remix-logo.has-broken-logo .remix-logo-fallback {
-	display: flex;
 }
 
 .remix-navbar-extras {
@@ -256,92 +216,6 @@ body.remix-desk .remix-awesomebar-input.form-control {
 	flex: 0 0 auto;
 	color: #6b6b6b;
 	font-size: var(--text-sm);
-}
-
-.remix-pinbar-wrap {
-	display: flex;
-	flex: 1 1 auto;
-	align-items: center;
-	gap: 6px;
-	min-width: 0;
-}
-
-.remix-pinbar {
-	display: flex;
-	flex: 1 1 auto;
-	align-items: center;
-	gap: 6px;
-	min-width: 0;
-	overflow-x: auto;
-}
-
-.remix-pin-add {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex: 0 0 auto;
-	width: 28px;
-	height: 28px;
-	border-radius: 50%;
-	background: var(--remix-chip);
-	border: 1px dashed var(--remix-green-hover);
-	color: var(--remix-topbar-ink, var(--remix-ink));
-	cursor: pointer;
-}
-
-.remix-pin-add-icon {
-	display: block;
-	width: 16px;
-	height: 16px;
-	background: currentColor;
-	-webkit-mask: url("/assets/ui_styles/remix/images/pin.png") center / contain no-repeat;
-	mask: url("/assets/ui_styles/remix/images/pin.png") center / contain no-repeat;
-}
-
-.remix-pin-add:hover {
-	background: var(--remix-green-hover);
-	border-style: solid;
-}
-
-.remix-pin {
-	display: flex;
-	align-items: center;
-	flex: 0 0 auto;
-	max-width: 180px;
-	background: var(--remix-chip);
-	border: 1px solid var(--remix-green-hover);
-	border-radius: 999px;
-	padding: 2px 4px 2px 10px;
-	color: var(--remix-topbar-ink, var(--remix-ink));
-	cursor: grab;
-}
-
-.remix-pin.is-dragging {
-	opacity: 0.55;
-	cursor: grabbing;
-}
-
-.remix-pin-link {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	min-width: 0;
-	color: inherit;
-	text-decoration: none;
-}
-
-.remix-pin-link span {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.remix-pin-remove {
-	width: 22px;
-	height: 22px;
-	border-radius: 50%;
-	color: var(--remix-topbar-muted, var(--remix-ink-muted));
-	cursor: pointer;
 }
 
 .remix-user {
@@ -653,17 +527,6 @@ body.remix-desk .remix-favorites-button.is-bookmarked .icon {
 
 .remix-menu-item.is-nested .remix-menu-link {
 	padding-left: 28px;
-}
-
-.remix-pin-btn {
-	opacity: 0;
-	padding: 4px 8px;
-	color: var(--remix-ink-muted);
-}
-
-.remix-menu-item:hover .remix-pin-btn,
-.remix-pin-btn.is-pinned {
-	opacity: 1;
 }
 
 .remix-section {

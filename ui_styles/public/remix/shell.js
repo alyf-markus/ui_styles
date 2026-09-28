@@ -3,7 +3,6 @@ frappe.provide("ui_styles.remix");
 const LAST_APP_KEY = "erpnext_remix:last_app";
 const SECTION_STATE_KEY = "erpnext_remix:sections";
 const CONTENT_SEARCH_KEY = "erpnext_remix:content_search";
-const PINBAR_MAX = 10;
 const HISTORY_MAX = 10;
 const COLOR_PROPS = [
 	"--remix-green",
@@ -144,10 +143,6 @@ ui_styles.remix.get_item_path = function (item) {
 	});
 };
 
-ui_styles.remix.pin_key = function (item) {
-	return `${(item.link_type || "").toLowerCase()}::${item.link_to || ""}`;
-};
-
 ui_styles.remix.history_label = function (route_str) {
 	const route = (route_str || "").split("/").filter(Boolean);
 	if (!route.length) {
@@ -177,25 +172,6 @@ ui_styles.remix.history_label = function (route_str) {
 		return $("<div>").html(frappe.utils.get_route_label(route_str)).text();
 	}
 	return route.join(" / ");
-};
-
-ui_styles.remix.is_pinned = function (item) {
-	const key = ui_styles.remix.pin_key(item);
-	return (frappe.boot.remix.pinbar || []).some((pin) => ui_styles.remix.pin_key(pin) === key);
-};
-
-ui_styles.remix.fix_broken_brand_logo = function () {
-	const fallback = "/assets/erpnext/images/erpnext-logo.svg";
-	$(".desktop-navbar img").each(function () {
-		const img = this;
-		if (img.dataset.remixFallback) {
-			return;
-		}
-		if (img.complete && img.naturalWidth === 0 && img.getAttribute("src")) {
-			img.dataset.remixFallback = "1";
-			img.src = fallback;
-		}
-	});
 };
 
 if (!window.__ui_styles_remix_logo_guard) {
@@ -314,21 +290,7 @@ class RemixShell {
 		return this.apps[0] ? this.apps[0].label : null;
 	}
 
-	logo_html() {
-		const src = frappe.boot.remix.logo;
-		const fallback = `<span class="remix-logo-fallback">${frappe.utils.icon("building", "md")}</span>`;
-		if (!src) {
-			return fallback;
-		}
-		return `<img src="${frappe.utils.escape_html(encodeURI(src))}" alt="${frappe.utils.escape_html(
-			__("Company Logo")
-		)}">${fallback}`;
-	}
-
 	make() {
-		this.$topbar = $();
-		this.$pinbar = $();
-		this.$pin_add = $();
 		this.$sidebar = $();
 		if (this.flags.alternative_navigation) {
 			const search_html = this.flags.search
@@ -912,25 +874,6 @@ class RemixShell {
 		return state;
 	}
 
-	fit_frappe_sidebar() {
-		if (!this.flags.top_bar || this.flags.alternative_navigation) {
-			return;
-		}
-		const sidebar = frappe.app && frappe.app.sidebar;
-		if (!sidebar || sidebar.__ui_styles_remix_height) {
-			return;
-		}
-		sidebar.__ui_styles_remix_height = true;
-		sidebar.set_height = () => {
-			const top =
-				parseFloat(
-					getComputedStyle(document.body).getPropertyValue("--remix-topbar-height")
-				) || 52;
-			$(".body-sidebar").css("height", `${window.innerHeight - top}px`);
-		};
-		sidebar.set_height();
-	}
-
 	patch_frappe_sidebar_paths() {
 		const TypeLink = frappe.ui.sidebar_item && frappe.ui.sidebar_item.TypeLink;
 		if (!TypeLink || TypeLink.prototype.__ui_styles_remix_path) {
@@ -1486,15 +1429,6 @@ class RemixShell {
 			return $();
 		}
 
-		const pinned = this.flags.pin && ui_styles.remix.is_pinned(item);
-		const pin_title = pinned ? __("Unpin from Pinbar") : __("Pin to Pinbar");
-		const pin_html = this.flags.pin
-			? `<button type="button" class="btn-reset remix-pin-btn ${
-					pinned ? "is-pinned" : ""
-				}" title="${pin_title}" aria-label="${pin_title}">
-					${frappe.utils.icon(pinned ? "bookmark" : "star", "sm")}
-				</button>`
-			: "";
 		const $row = $(`
 			<div class="remix-menu-item ${nested ? "is-nested" : ""}">
 				<a class="remix-menu-link" href="${frappe.utils.escape_html(path)}">
@@ -1503,137 +1437,9 @@ class RemixShell {
 					}</span>
 					<span class="remix-menu-label">${frappe.utils.escape_html(__(item.label))}</span>
 				</a>
-				${pin_html}
 			</div>
 		`);
-		$row.find(".remix-pin-btn").on("click", (event) => {
-			event.preventDefault();
-			event.stopPropagation();
-			this.toggle_pin(item);
-		});
 		return $row;
-	}
-
-	toggle_pin(item) {
-		if (ui_styles.remix.is_pinned(item)) {
-			frappe.call({
-				method: "ui_styles.remix.pinbar.unpin",
-				args: { link_type: item.link_type, link_to: item.link_to },
-				callback: (r) => this.set_pinbar(r.message),
-			});
-			return;
-		}
-		if ((frappe.boot.remix.pinbar || []).length >= PINBAR_MAX) {
-			frappe.show_alert({
-				message: __("Pinbar is full (max {0}).", [PINBAR_MAX]),
-				indicator: "orange",
-			});
-			return;
-		}
-		frappe.call({
-			method: "ui_styles.remix.pinbar.pin",
-			args: {
-				item: {
-					label: item.label,
-					link_type: item.link_type,
-					link_to: item.link_to,
-					icon: item.icon,
-				},
-			},
-			callback: (r) => this.set_pinbar(r.message),
-		});
-	}
-
-	set_pinbar(items) {
-		frappe.boot.remix.pinbar = items || [];
-		this.render_pinbar();
-		this.render_menu();
-	}
-
-	setup_pinbar_sortable() {
-		if (this.pin_sortable || typeof Sortable === "undefined") {
-			return;
-		}
-		this.pin_sortable = new Sortable(this.$pinbar.get(0), {
-			animation: 150,
-			draggable: ".remix-pin",
-			filter: ".remix-pin-remove",
-			preventOnFilter: true,
-			ghostClass: "is-dragging",
-			onEnd: (event) => {
-				if (event.oldIndex === event.newIndex) {
-					return;
-				}
-				this._ignore_pin_click = true;
-				this.save_pin_order();
-				setTimeout(() => {
-					this._ignore_pin_click = false;
-				}, 50);
-			},
-		});
-	}
-
-	save_pin_order() {
-		const items = [];
-		this.$pinbar.find(".remix-pin").each((_, el) => {
-			items.push({
-				link_type: el.dataset.linkType,
-				link_to: el.dataset.linkTo,
-			});
-		});
-		frappe.call({
-			method: "ui_styles.remix.pinbar.reorder",
-			args: { items },
-			callback: (r) => {
-				frappe.boot.remix.pinbar = r.message || [];
-			},
-		});
-	}
-
-	render_pinbar() {
-		this.$pinbar.empty();
-		const items = frappe.boot.remix.pinbar || [];
-		items.forEach((item) => {
-			const path = ui_styles.remix.get_item_path({
-				type: "Link",
-				link_type: item.link_type,
-				link_to: item.link_to,
-				label: item.label,
-				icon: item.icon,
-			});
-			if (!path) {
-				return;
-			}
-			const $chip = $(`
-				<div class="remix-pin" draggable="false" data-link-type="${frappe.utils.escape_html(
-					item.link_type || ""
-				)}" data-link-to="${frappe.utils.escape_html(item.link_to || "")}">
-					<a class="remix-pin-link" href="${frappe.utils.escape_html(path)}" title="${frappe.utils.escape_html(
-						__(item.label)
-					)}">
-						${item.icon ? frappe.utils.icon(item.icon, "sm") : ""}
-						<span>${frappe.utils.escape_html(__(item.label))}</span>
-					</a>
-					<button type="button" class="btn-reset remix-pin-remove" title="${__("Unpin")}" aria-label="${__(
-						"Unpin"
-					)}">×</button>
-				</div>
-			`);
-			$chip.find(".remix-pin-link").on("click", (event) => {
-				if (this._ignore_pin_click) {
-					event.preventDefault();
-				}
-			});
-			$chip.find(".remix-pin-remove").on("click", (event) => {
-				event.preventDefault();
-				frappe.call({
-					method: "ui_styles.remix.pinbar.unpin",
-					args: { link_type: item.link_type, link_to: item.link_to },
-					callback: (r) => this.set_pinbar(r.message),
-				});
-			});
-			this.$pinbar.append($chip);
-		});
 	}
 
 	entity_from_route(route) {
@@ -1735,118 +1541,6 @@ class RemixShell {
 			return;
 		}
 		this.highlight_active();
-	}
-
-	icon_for_doctype(doctype) {
-		try {
-			const meta = frappe.get_meta(doctype);
-			if (meta && meta.icon) {
-				return meta.icon;
-			}
-		} catch (e) {
-			// meta not loaded yet
-		}
-		return "file";
-	}
-
-	current_page_pin() {
-		const route = frappe.get_route() || [];
-		if (!route.length) {
-			return null;
-		}
-		const view = route[0];
-		if (view === "List" && route[2] === "Report" && route[3]) {
-			return {
-				label: __(route[3]),
-				link_type: "Report",
-				link_to: route[3],
-				icon: "bar-chart",
-			};
-		}
-		if (["List", "Form", "Tree", "Report"].includes(view) && route[1]) {
-			return {
-				label: __(route[1]),
-				link_type: "DocType",
-				link_to: route[1],
-				icon: this.icon_for_doctype(route[1]),
-			};
-		}
-		if (view === "query-report" && route[1]) {
-			return {
-				label: __(route[1]),
-				link_type: "Report",
-				link_to: route[1],
-				icon: "bar-chart",
-			};
-		}
-		if ((view === "dashboard-view" || view === "dashboard") && route[1]) {
-			return {
-				label: __(route[1]),
-				link_type: "Dashboard",
-				link_to: route[1],
-				icon: "dashboard",
-			};
-		}
-		if (view === "Workspaces") {
-			const name = route[route.length - 1];
-			if (!name || name === "desktop") {
-				return null;
-			}
-			return {
-				label: __(name),
-				link_type: "Workspace",
-				link_to: name,
-				icon: "layout",
-			};
-		}
-		if (route.length === 1 && view && view !== "desktop") {
-			if (frappe.workspaces && frappe.workspaces[frappe.router.slug(view)]) {
-				const workspace = frappe.workspaces[frappe.router.slug(view)];
-				return {
-					label: __(workspace.title || view),
-					link_type: "Workspace",
-					link_to: workspace.title || view,
-					icon: "layout",
-				};
-			}
-			if (frappe.boot.page_info && frappe.boot.page_info[view]) {
-				return {
-					label: __(view),
-					link_type: "Page",
-					link_to: view,
-					icon: "file",
-				};
-			}
-		}
-		const path = window.location.pathname;
-		if (!path || path === "/remix" || path === "/remix/") {
-			return null;
-		}
-		return {
-			label: frappe.get_route_str ? frappe.get_route_str() : path,
-			link_type: "URL",
-			link_to: path,
-			icon: "link",
-		};
-	}
-
-	pin_current_page() {
-		const item = this.current_page_pin();
-		if (!item) {
-			frappe.show_alert({
-				message: __("This page cannot be pinned."),
-				indicator: "orange",
-			});
-			return;
-		}
-		if (ui_styles.remix.is_pinned(item)) {
-			frappe.show_alert({
-				message: __("{0} is already in the Pinbar.", [item.label]),
-				indicator: "blue",
-			});
-			return;
-		}
-		this.toggle_pin(item);
 	}
 
 	highlight_active() {
