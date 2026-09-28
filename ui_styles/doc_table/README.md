@@ -38,8 +38,8 @@ When `link:` is omitted, the field uses the single **Link** on the target DocTyp
 
 | Hook | Value |
 |------|--------|
-| `app_include_css` | `/assets/ui_styles/doc_table/doc_table.css` |
-| `app_include_js` | `/assets/ui_styles/doc_table/doc_table.js`, `form_builder_preview.js` |
+| `app_include_css` | `ui_styles.bundle.css` (imports `doc_table.css`) |
+| `app_include_js` | `ui_styles.bundle.js` (imports `doc_table.js`, `form_builder_preview.js`) |
 | `doc_events` | **DocType** / **Custom Field** / **Customize Form** `validate` |
 | `after_install` / migrate patch | registers fieldtype Select options |
 

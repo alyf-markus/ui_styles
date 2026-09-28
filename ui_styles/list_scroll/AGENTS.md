@@ -34,7 +34,7 @@ Opt-in dense Desk list layout: content-sized columns and one shared horizontal s
 
 Whitelist: none. Bootinfo drives client behaviour. Dependent flags are forced to 0 when dense is off (defaults and override rows).
 
-Load order in `hooks.py`: `list_scroll_sync.js` → `sticky_header.js` → `floating_paging.js`.
+Load order in `ui_styles.bundle.js`: `list_scroll_sync.js` → `sticky_header.js` → `floating_paging.js`.
 
 ## Client contract
 

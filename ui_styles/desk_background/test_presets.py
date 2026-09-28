@@ -1,7 +1,7 @@
 # Copyright (c) 2026, ALYF GmbH and contributors
 # For license information, please see license.txt
 
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import UnitTestCase
 
 from ui_styles.desk_background.presets import (
 	DARK_TEXT,
@@ -15,7 +15,7 @@ from ui_styles.desk_background.presets import (
 )
 
 
-class TestPresets(FrappeTestCase):
+class TestPresets(UnitTestCase):
 	def test_all_intensities_meet_contrast_light(self):
 		for label, preset in PRESETS.items():
 			if label == STANDARD:

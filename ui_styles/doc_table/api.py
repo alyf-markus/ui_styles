@@ -251,7 +251,7 @@ def _count_rows(doctype: str, list_kwargs: dict) -> int:
 		return _count_rows_via_list(doctype, list_kwargs)
 
 	args = {
-		"fields": ["count(name) as total"],
+		"fields": [{"COUNT": "name", "as": "total"}],
 		"ignore_permissions": False,
 		"limit_page_length": None,
 		"order_by": None,

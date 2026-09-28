@@ -2,12 +2,12 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase, UnitTestCase
 
 from ui_styles.doc_table.parse import parse_options
 
 
-class TestDocTableParse(FrappeTestCase):
+class TestDocTableParse(UnitTestCase):
 	def test_parse_options_doctype_only(self):
 		parsed = parse_options("doctype: Sales Invoice")
 		self.assertEqual(parsed.doctype, "Sales Invoice")
@@ -157,7 +157,7 @@ class TestDocTableParse(FrappeTestCase):
 		self.assertEqual(resolve_fetch_limit(50, 8, "pages"), 8)
 
 
-class TestDocTableLinks(FrappeTestCase):
+class TestDocTableLinks(IntegrationTestCase):
 	# Frappe core DocTypes only - CI installs ui_styles without ERPNext.
 	_target_doctype = "Route History"
 	_parent_doctype = "User"
@@ -243,7 +243,7 @@ class TestDocTableLinks(FrappeTestCase):
 				frappe.clear_cache(doctype=self._target_doctype)
 
 
-class TestDocTableValidate(FrappeTestCase):
+class TestDocTableValidate(IntegrationTestCase):
 	def test_rejects_single_doctype(self):
 		from ui_styles.doc_table.parse import validate_doc_table_field
 
@@ -268,7 +268,7 @@ class TestDocTableValidate(FrappeTestCase):
 			validate_doc_table_field(df, parent_doctype="User")
 
 
-class TestDocTableCount(FrappeTestCase):
+class TestDocTableCount(IntegrationTestCase):
 	def test_count_rows_returns_int_for_todo(self):
 		from ui_styles.doc_table.api import _count_rows
 
@@ -282,7 +282,7 @@ class TestDocTableCount(FrappeTestCase):
 		self.assertEqual(_count_rows("System Settings", {}), 0)
 
 
-class TestDocTableRegister(FrappeTestCase):
+class TestDocTableRegister(IntegrationTestCase):
 	def tearDown(self):
 		from ui_styles.doc_table.register import ensure_fieldtype_options
 

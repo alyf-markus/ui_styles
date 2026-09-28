@@ -19,6 +19,10 @@ Opt-in Desk background tint. See `ui_styles/desk_background/README.md`.
 
 Opt-in dense Desk list layout with a shared horizontal scrollbar. See `ui_styles/list_scroll/README.md`.
 
+#### Remix
+
+Opt-in Desk shell at `/remix` (history and favorites in the Frappe navbar, optional sidebar, colors). See `ui_styles/remix/README.md`.
+
 ### Installation
 
 You can install this app using the [bench](https://github.com/frappe/bench) CLI:
@@ -49,7 +53,7 @@ Pre-commit is configured to use the following tools for checking and formatting 
 
 This app can use GitHub Actions for CI. The following workflows are configured:
 
-- CI: Installs this app and runs unit tests on every push to `version-15` branch.
+- CI: Installs this app on Frappe `version-16` and runs unit tests on every push to the `develop` branch.
 - Linters: Runs [Frappe Semgrep Rules](https://github.com/frappe/semgrep-rules) and [pip-audit](https://pypi.org/project/pip-audit/) on every pull request.
 
 

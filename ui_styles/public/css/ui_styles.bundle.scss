@@ -1,0 +1,8 @@
+@use "sass:meta";
+
+/* doc_table: */
+@include meta.load-css("../doc_table/doc_table.css");
+/* list_scroll: */
+@include meta.load-css("../list_scroll/list_layout.css");
+/* remix: */
+@include meta.load-css("../remix/remix.bundle.css");

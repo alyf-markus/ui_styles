@@ -548,3 +548,78 @@ msgstr "Fixierte Spalten dürfen nicht negativ sein."
 #: ui_styles/list_scroll/doctype/list_scroll_settings/list_scroll_settings.json
 msgid "When a DocType has a row here, that row fully replaces the Defaults for its list view."
 msgstr "Wenn ein DocType hier eine Zeile hat, ersetzt diese Zeile die Standardeinstellungen für dessen Listenansicht vollständig."
+
+#. Label of a Check field in DocType 'Remix Settings'
+#: ui_styles/remix/doctype/remix_settings/remix_settings.json
+msgid "Enable Remix"
+msgstr "Remix aktivieren"
+
+#. Name of a DocType / Link in UI Styles Workspace
+#: ui_styles/remix/doctype/remix_settings/remix_settings.json
+#: ui_styles/ui_styles/workspace/ui_styles/ui_styles.json
+msgid "Remix Settings"
+msgstr "Remix-Einstellungen"
+
+#. Label of a Section Break / Check field in DocType 'Remix Settings'
+#: ui_styles/remix/doctype/remix_settings/remix_settings.json
+msgid "Top Bar"
+msgstr "Kopfleiste"
+
+#. Label of a Check field in DocType 'Remix Settings'
+#: ui_styles/remix/doctype/remix_settings/remix_settings.json
+msgid "Pin"
+msgstr "Anheften"
+
+#. Label of a Section Break / Check field in DocType 'Remix Settings'
+#: ui_styles/remix/doctype/remix_settings/remix_settings.json
+msgid "Alternative Navigation"
+msgstr "Alternative Navigation"
+
+#: ui_styles/remix/doctype/remix_settings/remix_settings.py:33
+msgid "Enable Remix requires Top Bar or Alternative Navigation."
+msgstr "Remix aktivieren erfordert Kopfleiste oder Alternative Navigation."
+
+#: ui_styles/remix/doctype/remix_settings/remix_settings.py:34
+msgid "Invalid Remix Settings"
+msgstr "Ungültige Remix-Einstellungen"
+
+#: ui_styles/remix/doctype/remix_settings/remix_settings.py:52
+msgid "Reload the Desk (hard refresh) to apply Remix Settings changes."
+msgstr "Desk neu laden (hart aktualisieren), um Änderungen an den Remix-Einstellungen anzuwenden."
+
+#: ui_styles/remix/pinbar.py:18
+msgid "Pin is not enabled."
+msgstr "Anheften ist nicht aktiviert."
+
+#: ui_styles/remix/app_favorites.py:18
+msgid "Favorites is not enabled."
+msgstr "Favoriten sind nicht aktiviert."
+
+#: ui_styles/remix/appearance.py:111
+msgid "Colors is not enabled."
+msgstr "Farben sind nicht aktiviert."
+
+#: ui_styles/remix/appearance.py:185
+msgid "Manual colours are not enabled."
+msgstr "Manuelle Farben sind nicht aktiviert."
+
+#: ui_styles/remix/appearance.py:187
+msgid "Pick a background colour and a sidebar colour."
+msgstr "Bitte eine Farbe für Hintergrund und Seitenleiste wählen."
+
+#. Label of a Check field in DocType 'Remix Settings'
+#: ui_styles/remix/doctype/remix_settings/remix_settings.json
+msgid "Manual Colours"
+msgstr "Manuelle Farben"
+
+#: ui_styles/remix/history.py:16
+msgid "History is not enabled."
+msgstr "Verlauf ist nicht aktiviert."
+
+#: ui_styles/public/remix/shell.js
+msgid "Search in documents"
+msgstr "In Belegen suchen"
+
+#: ui_styles/public/remix/shell.js
+msgid "Search customers, documents ..."
+msgstr "Kunden, Belege ... suchen"

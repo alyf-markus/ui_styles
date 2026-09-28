@@ -100,3 +100,4 @@ Hard-refresh Desk after build for JS/CSS.
 | `doc_table` | **Doc Table** / `docs/.../doc-table/` | `doc_table/AGENTS.md` |
 | `desk_background` | **Desk Background** / `docs/.../desk-background/` | `desk_background/AGENTS.md` |
 | `list_scroll` | **List Scroll** / `docs/.../list-scroll/` | `list_scroll/AGENTS.md` |
+| `remix` | **Remix** / `docs/.../remix/` | `remix/AGENTS.md` |

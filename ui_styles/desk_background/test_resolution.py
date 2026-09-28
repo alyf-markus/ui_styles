@@ -1,13 +1,13 @@
 # Copyright (c) 2026, ALYF GmbH and contributors
 # For license information, please see license.txt
 
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import UnitTestCase
 
 from ui_styles.desk_background.boot import resolve_intensity_from_settings, resolve_preset_from_settings
 from ui_styles.desk_background.presets import STANDARD, STRONG, TINT
 
 
-class TestResolution(FrappeTestCase):
+class TestResolution(UnitTestCase):
 	def test_site_standard_user_override(self):
 		self.assertEqual(
 			resolve_preset_from_settings(

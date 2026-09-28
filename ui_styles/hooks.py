@@ -25,23 +25,9 @@ app_license = "gpl-3.0"
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = [
-	# doc_table:
-	"/assets/ui_styles/doc_table/doc_table.css",
-	# list_scroll:
-	"/assets/ui_styles/list_scroll/list_layout.css",
-]
-app_include_js = [
-	# doc_table:
-	"/assets/ui_styles/doc_table/doc_table.js",
-	"/assets/ui_styles/doc_table/form_builder_preview.js",
-	# desk_background:
-	"/assets/ui_styles/desk_background/desk_background.js",
-	# list_scroll:
-	"/assets/ui_styles/list_scroll/list_scroll_sync.js",
-	"/assets/ui_styles/list_scroll/sticky_header.js",
-	"/assets/ui_styles/list_scroll/floating_paging.js",
-]
+# doc_table, desk_background, list_scroll, remix: imported by the app bundles.
+app_include_css = "ui_styles.bundle.css"
+app_include_js = "ui_styles.bundle.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/ui_styles/css/ui_styles.css"
@@ -106,6 +92,11 @@ after_install = "ui_styles.install.after_install"
 
 # Aggregates per-module extend_bootinfo (see boot.py).
 extend_bootinfo = "ui_styles.boot.extend_bootinfo"
+
+# remix:
+website_route_rules = [
+	{"from_route": "/remix/<path:app_path>", "to_route": "remix"},
+]
 
 # Uninstallation
 # ------------

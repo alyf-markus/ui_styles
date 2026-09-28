@@ -2,13 +2,14 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 
 from ui_styles.list_scroll.boot import extend_bootinfo
 
 
-class TestListScrollSettings(FrappeTestCase):
+class TestListScrollSettings(IntegrationTestCase):
 	def setUp(self):
+		super().setUp()
 		doc = frappe.get_single("List Scroll Settings")
 		doc.dense_list_layout = 0
 		doc.sticky_list_header = 0
@@ -19,6 +20,7 @@ class TestListScrollSettings(FrappeTestCase):
 
 	def tearDown(self):
 		self.setUp()
+		super().tearDown()
 
 	def test_boot_defaults_off(self):
 		bootinfo = frappe._dict()

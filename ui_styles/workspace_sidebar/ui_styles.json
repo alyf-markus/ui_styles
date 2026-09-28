@@ -1,0 +1,65 @@
+{
+ "app": "ui_styles",
+ "creation": "2026-09-25 11:14:51.632518",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "header_icon": "image",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "list",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Home",
+   "link_to": "UI Styles",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "crown",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Remix",
+   "link_to": "Remix Settings",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "list-music",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "List Scroll",
+   "link_to": "List Scroll Settings",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "paint-roller",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Desk Background",
+   "link_to": "Desk Background Settings",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-09-28 12:29:35.665606",
+ "modified_by": "Administrator",
+ "module": "UI Styles",
+ "name": "UI Styles",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "UI Styles"
+}
