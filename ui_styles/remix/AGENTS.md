@@ -45,7 +45,7 @@ JS namespace: `ui_styles.remix`. Body classes: `remix-desk`, `remix-has-sidebar`
 
 - Boot: `frappe.boot.remix.enabled` (load gate) plus `history` / `favorites` / `search` / `alternative_navigation` / `colors`
 - Search is 0 when Alternative Navigation is off
-- Sidebar search: Frappe AwesomeBar bound to the sidebar input; the "Search in documents" checkbox (localStorage `erpnext_remix:content_search`) swaps the list for `frappe.search.utils.get_global_results` hits
+- Sidebar search: Frappe AwesomeBar bound to the sidebar input; the "Search in documents" checkbox (localStorage `erpnext_remix:content_search`) swaps the list for `frappe.utils.global_search.search` hits (limit 200, because Frappe caps at 20 before sorting and returns DocTypes in arbitrary order); client orders exact name, then masters (`CONTENT_SEARCH_MASTERS`), then the rest
 - Favorites/Colors APIs throw if that widget is off
 - Alternative Navigation off: keep Frappe sidebar. History/Favorites still use the Frappe navbar.
 

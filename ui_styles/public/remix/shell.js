@@ -3,6 +3,17 @@ frappe.provide("ui_styles.remix");
 const LAST_APP_KEY = "erpnext_remix:last_app";
 const SECTION_STATE_KEY = "erpnext_remix:sections";
 const CONTENT_SEARCH_KEY = "erpnext_remix:content_search";
+const CONTENT_SEARCH_MAX = 20;
+const CONTENT_SEARCH_MASTERS = [
+	"Customer",
+	"Supplier",
+	"Item",
+	"Contact",
+	"Address",
+	"Employee",
+	"Lead",
+	"Project",
+];
 const HISTORY_MAX = 10;
 const COLOR_PROPS = [
 	"--remix-green",
@@ -1176,31 +1187,40 @@ class RemixShell {
 		let request_id = 0;
 		const show_results = frappe.utils.debounce((txt) => {
 			const current = ++request_id;
-			frappe.search.utils.get_global_results(txt).then((sets) => {
+			// Frappe's default limit of 20 is applied before sorting by DocType priority,
+			// so a matching Supplier or Customer gets cut off behind 20 equally ranked
+			// purchase documents. Fetch more, let the server sort masters first, show the top.
+			frappe.xcall("frappe.utils.global_search.search", { text: txt, limit: 200 }).then((rows) => {
 				if (current !== request_id) {
 					return;
 				}
 				const needle = txt.toLowerCase();
 				const exact = [];
+				const masters = [];
 				const rest = [];
-				sets.forEach((set) => {
-					set.results.forEach((row) => {
-						const item = {
-							label: row.label,
-							value: `${__(set.title)}: ${row.value}`,
-							description:
-								row.label === row.value
-									? __(set.title)
-									: `${__(set.title)} ${row.value}`,
-							route: row.route,
-						};
-						const name = String(row.value || "").toLowerCase();
-						(name === needle ? exact : rest).push(item);
-					});
+				(rows || []).forEach((row) => {
+					const label = row.title || row.name;
+					const item = {
+						label,
+						value: `${__(row.doctype)}: ${row.name}`,
+						description:
+							label === row.name ? __(row.doctype) : `${__(row.doctype)} ${row.name}`,
+						route: ["Form", row.doctype, row.name],
+						_master: CONTENT_SEARCH_MASTERS.indexOf(row.doctype),
+					};
+					if (row.name.toLowerCase() === needle) {
+						exact.push(item);
+					} else if (item._master >= 0) {
+						masters.push(item);
+					} else {
+						rest.push(item);
+					}
 				});
-				// Global Search groups by DocType priority and splits names on "-".
-				// An exact document name still belongs first, so Enter opens that record.
-				const items = exact.concat(rest);
+				// The server returns matches in arbitrary DocType order. An exact document
+				// name comes first so Enter opens that record, then master data (the
+				// customer itself before its 20 invoices), then everything else.
+				masters.sort((a, b) => a._master - b._master);
+				const items = exact.concat(masters, rest).slice(0, CONTENT_SEARCH_MAX);
 				items.forEach((item, i) => {
 					item.index = 1000 - i;
 				});
