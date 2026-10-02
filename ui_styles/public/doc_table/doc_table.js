@@ -533,8 +533,8 @@ frappe.ui.form.ControlDocTable = class ControlDocTable extends frappe.ui.form.Co
 		const fieldname = col.id;
 		const docname = (doc && doc.name) || "";
 		const is_link = this.is_doc_link_column(col, table_meta);
-		let html = "";
-		let title = "";
+		let html;
+		let title;
 
 		if (fieldname === "name") {
 			title = value || docname || "";

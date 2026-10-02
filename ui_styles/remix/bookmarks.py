@@ -28,7 +28,7 @@ def _load_items() -> list[dict]:
 		return []
 	try:
 		items = json.loads(raw)
-	except (json.JSONDecodeError, TypeError):
+	except json.JSONDecodeError, TypeError:
 		return []
 	if not isinstance(items, list):
 		return []

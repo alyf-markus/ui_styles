@@ -82,9 +82,7 @@ class TestRemixSettings(IntegrationTestCase):
 	def test_legacy_hex_colors_are_standard(self):
 		from ui_styles.remix.appearance import get_colors
 
-		frappe.defaults.set_user_default(
-			COLORS_KEY, '{"topbar": "#0a0a0a", "sidebar": "#0c3b2c"}'
-		)
+		frappe.defaults.set_user_default(COLORS_KEY, '{"topbar": "#0a0a0a", "sidebar": "#0c3b2c"}')
 		self.assertEqual(get_colors()["preset"], "Standard")
 		self.assertIsNone(get_colors()["background"])
 		frappe.defaults.set_user_default(

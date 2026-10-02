@@ -1,5 +1,9 @@
-import js from "@eslint/js";
-import globals from "globals";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+// Use CJS resolver so pre-commit NODE_PATH is honored.
+const js = require("@eslint/js");
+const globals = require("globals");
 
 const frappeGlobals = Object.fromEntries(
 	[

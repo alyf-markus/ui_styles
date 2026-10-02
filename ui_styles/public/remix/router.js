@@ -80,6 +80,11 @@ ui_styles.remix.patch_router = function () {
 	}
 };
 
-if (ui_styles.remix.is_remix() && window.frappe && frappe.router && ui_styles.remix.flags().enabled) {
+if (
+	ui_styles.remix.is_remix() &&
+	window.frappe &&
+	frappe.router &&
+	ui_styles.remix.flags().enabled
+) {
 	ui_styles.remix.patch_router();
 }

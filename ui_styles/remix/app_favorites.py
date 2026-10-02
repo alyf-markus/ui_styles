@@ -27,7 +27,7 @@ def _load_labels() -> list[str]:
 		return []
 	try:
 		labels = json.loads(raw)
-	except (json.JSONDecodeError, TypeError):
+	except json.JSONDecodeError, TypeError:
 		return []
 	if not isinstance(labels, list):
 		return []

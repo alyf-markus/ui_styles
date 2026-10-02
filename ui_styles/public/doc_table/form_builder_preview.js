@@ -104,8 +104,8 @@ frappe.provide("ui_styles.doc_table");
 			<div class="doc-table-builder-head grid-heading-row">
 				<div class="doc-table-builder-cols">${heads}</div>
 				<button type="button" class="btn btn-xs btn-icon doc-table-filter-btn${applied}" title="${__(
-			"Set Filters"
-		)}">
+					"Set Filters"
+				)}">
 					<div>${frappe.utils.icon("filter", "sm")}</div>
 				</button>
 			</div>

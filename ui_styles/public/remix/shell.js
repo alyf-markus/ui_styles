@@ -417,7 +417,8 @@ class RemixShell {
 		if ($desktop.length) {
 			$desktop.prepend(this.$navbar_extras);
 		} else {
-			const $page = frappe.container && frappe.container.page ? $(frappe.container.page) : $();
+			const $page =
+				frappe.container && frappe.container.page ? $(frappe.container.page) : $();
 			let $actions = $page.find(".page-head .page-actions").first();
 			if (!$actions.length) {
 				$actions = $(".page-container:visible .page-head .page-actions").first();
@@ -630,7 +631,9 @@ class RemixShell {
 		}
 		const open = !this.$favorites.hasClass("is-open");
 		this.$favorites.toggleClass("is-open", open);
-		this.$favorites.find(".remix-favorites-button").attr("aria-expanded", open ? "true" : "false");
+		this.$favorites
+			.find(".remix-favorites-button")
+			.attr("aria-expanded", open ? "true" : "false");
 		if (open) {
 			this.close_history_menu();
 			this.render_favorites_menu();
@@ -671,7 +674,10 @@ class RemixShell {
 	toggle_current_bookmark() {
 		const current = this.current_bookmark();
 		if (!current) {
-			frappe.show_alert({ message: __("This page cannot be bookmarked."), indicator: "orange" });
+			frappe.show_alert({
+				message: __("This page cannot be bookmarked."),
+				indicator: "orange",
+			});
 			return;
 		}
 		const method = this.is_bookmarked(current.route)
@@ -726,9 +732,7 @@ class RemixShell {
 					<a class="dropdown-item remix-history-item remix-bookmark-link" href="${frappe.utils.escape_html(
 						frappe.router.make_url(item.route.split("/"))
 					)}" role="menuitem">
-						<span class="remix-history-label">${frappe.utils.escape_html(
-							item.label || item.route
-						)}</span>
+						<span class="remix-history-label">${frappe.utils.escape_html(item.label || item.route)}</span>
 					</a>
 					<button type="button" class="btn-reset remix-bookmark-remove" title="${__(
 						"Remove bookmark"
@@ -778,12 +782,15 @@ class RemixShell {
 				items.push({ route: row.route, creation: row.creation || null });
 			}
 		});
-		(frappe.route_history || []).slice().reverse().forEach((route) => {
-			if (!route || !route[0] || !route[1]) {
-				return;
-			}
-			items.push({ route: route.join("/"), creation: null });
-		});
+		(frappe.route_history || [])
+			.slice()
+			.reverse()
+			.forEach((route) => {
+				if (!route || !route[0] || !route[1]) {
+					return;
+				}
+				items.push({ route: route.join("/"), creation: null });
+			});
 		return items;
 	}
 
@@ -1122,7 +1129,7 @@ class RemixShell {
 	}
 
 	set_section_expanded(label, expanded) {
-		let state = {};
+		let state;
 		try {
 			state = JSON.parse(localStorage.getItem(this.section_state_key()) || "{}");
 		} catch (e) {
@@ -1177,7 +1184,10 @@ class RemixShell {
 		const sync = () => {
 			const on = $toggle.prop("checked");
 			localStorage.setItem(CONTENT_SEARCH_KEY, on ? "1" : "0");
-			$input.attr("placeholder", on ? __("Search customers, documents ...") : command_placeholder);
+			$input.attr(
+				"placeholder",
+				on ? __("Search customers, documents ...") : command_placeholder
+			);
 			$input.trigger("input");
 		};
 		$toggle.prop("checked", localStorage.getItem(CONTENT_SEARCH_KEY) === "1");
@@ -1190,48 +1200,53 @@ class RemixShell {
 			// Frappe's default limit of 20 is applied before sorting by DocType priority,
 			// so a matching Supplier or Customer gets cut off behind 20 equally ranked
 			// purchase documents. Fetch more, let the server sort masters first, show the top.
-			frappe.xcall("frappe.utils.global_search.search", { text: txt, limit: 200 }).then((rows) => {
-				if (current !== request_id) {
-					return;
-				}
-				const needle = txt.toLowerCase();
-				const exact = [];
-				const masters = [];
-				const rest = [];
-				(rows || []).forEach((row) => {
-					const label = row.title || row.name;
-					const item = {
-						label,
-						value: `${__(row.doctype)}: ${row.name}`,
-						description:
-							label === row.name ? __(row.doctype) : `${__(row.doctype)} ${row.name}`,
-						route: ["Form", row.doctype, row.name],
-						_master: CONTENT_SEARCH_MASTERS.indexOf(row.doctype),
-					};
-					if (row.name.toLowerCase() === needle) {
-						exact.push(item);
-					} else if (item._master >= 0) {
-						masters.push(item);
-					} else {
-						rest.push(item);
+			frappe
+				.xcall("frappe.utils.global_search.search", { text: txt, limit: 200 })
+				.then((rows) => {
+					if (current !== request_id) {
+						return;
 					}
+					const needle = txt.toLowerCase();
+					const exact = [];
+					const masters = [];
+					const rest = [];
+					(rows || []).forEach((row) => {
+						const label = row.title || row.name;
+						const item = {
+							label,
+							value: `${__(row.doctype)}: ${row.name}`,
+							description:
+								label === row.name
+									? __(row.doctype)
+									: `${__(row.doctype)} ${row.name}`,
+							route: ["Form", row.doctype, row.name],
+							_master: CONTENT_SEARCH_MASTERS.indexOf(row.doctype),
+						};
+						if (row.name.toLowerCase() === needle) {
+							exact.push(item);
+						} else if (item._master >= 0) {
+							masters.push(item);
+						} else {
+							rest.push(item);
+						}
+					});
+					// The server returns matches in arbitrary DocType order. An exact document
+					// name comes first so Enter opens that record, then master data (the
+					// customer itself before its 20 invoices), then everything else.
+					masters.sort((a, b) => a._master - b._master);
+					const items = exact.concat(masters, rest).slice(0, CONTENT_SEARCH_MAX);
+					items.forEach((item, i) => {
+						item.index = 1000 - i;
+					});
+					items.push({
+						label: __("Search for {0}", [frappe.utils.xss_sanitise(txt).bold()]),
+						value: __("Search for {0}", [frappe.utils.xss_sanitise(txt)]),
+						index: 0,
+						onclick: () =>
+							frappe.searchdialog.search.init_search(txt, "global_search"),
+					});
+					this.awesome_bar.awesomplete.list = items;
 				});
-				// The server returns matches in arbitrary DocType order. An exact document
-				// name comes first so Enter opens that record, then master data (the
-				// customer itself before its 20 invoices), then everything else.
-				masters.sort((a, b) => a._master - b._master);
-				const items = exact.concat(masters, rest).slice(0, CONTENT_SEARCH_MAX);
-				items.forEach((item, i) => {
-					item.index = 1000 - i;
-				});
-				items.push({
-					label: __("Search for {0}", [frappe.utils.xss_sanitise(txt).bold()]),
-					value: __("Search for {0}", [frappe.utils.xss_sanitise(txt)]),
-					index: 0,
-					onclick: () => frappe.searchdialog.search.init_search(txt, "global_search"),
-				});
-				this.awesome_bar.awesomplete.list = items;
-			});
 		}, 250);
 
 		$input.on("input", (event) => {
@@ -1411,9 +1426,7 @@ class RemixShell {
 		this.$menu.empty();
 		const items = this.grouped_items();
 		if (!items.length) {
-			this.$menu.append(
-				`<div class="remix-empty text-muted">${__("No menu items")}</div>`
-			);
+			this.$menu.append(`<div class="remix-empty text-muted">${__("No menu items")}</div>`);
 			return;
 		}
 		items.forEach((item) => this.$menu.append(this.make_menu_item(item)));
@@ -1424,9 +1437,9 @@ class RemixShell {
 		if (item.type === "Section Break") {
 			const expanded = this.is_section_expanded(item.label);
 			const $section = $(`
-				<div class="remix-section ${expanded ? "" : "is-collapsed"}" data-section="${frappe.utils.escape_html(
-					item.label
-				)}">
+				<div class="remix-section ${
+					expanded ? "" : "is-collapsed"
+				}" data-section="${frappe.utils.escape_html(item.label)}">
 					<button type="button" class="btn-reset remix-section-toggle" aria-expanded="${
 						expanded ? "true" : "false"
 					}">
@@ -1461,9 +1474,7 @@ class RemixShell {
 		const $row = $(`
 			<div class="remix-menu-item ${nested ? "is-nested" : ""}">
 				<a class="remix-menu-link" href="${frappe.utils.escape_html(path)}">
-					<span class="remix-menu-icon">${
-						item.icon ? frappe.utils.icon(item.icon, "sm") : ""
-					}</span>
+					<span class="remix-menu-icon">${item.icon ? frappe.utils.icon(item.icon, "sm") : ""}</span>
 					<span class="remix-menu-label">${frappe.utils.escape_html(__(item.label))}</span>
 				</a>
 			</div>

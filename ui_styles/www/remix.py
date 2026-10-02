@@ -58,9 +58,7 @@ def get_context(context):
 			"google_analytics_anonymize_ip": frappe.conf.get("google_analytics_anonymize_ip"),
 			"remix_body_class": body_class(),
 			"app_name": (
-				frappe.get_website_settings("app_name")
-				or frappe.get_system_settings("app_name")
-				or "Frappe"
+				frappe.get_website_settings("app_name") or frappe.get_system_settings("app_name") or "Frappe"
 			),
 		}
 	)

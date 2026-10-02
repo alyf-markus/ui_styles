@@ -100,7 +100,7 @@ PRESET_CHROME = {
 
 
 def preset_labels() -> list[str]:
-	return [STANDARD] + list(PRESET_CHROME.keys())
+	return [STANDARD, *PRESET_CHROME.keys()]
 
 
 def _require_colors():
@@ -142,7 +142,7 @@ def get_colors() -> dict:
 	if raw:
 		try:
 			parsed = json.loads(raw)
-		except (json.JSONDecodeError, TypeError):
+		except json.JSONDecodeError, TypeError:
 			parsed = {}
 	if not isinstance(parsed, dict):
 		parsed = {}

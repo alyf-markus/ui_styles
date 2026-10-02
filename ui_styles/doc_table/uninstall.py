@@ -13,6 +13,6 @@ def before_uninstall() -> None:
 	remaining = frappe.db.count("Custom Field", {"fieldtype": FIELDTYPE})
 	if remaining:
 		frappe.msgprint(
-			f"Left {remaining} Custom Field(s) with fieldtype Doc Table. " "Change or remove them manually.",
+			f"Left {remaining} Custom Field(s) with fieldtype Doc Table. Change or remove them manually.",
 			alert=True,
 		)
